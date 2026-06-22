@@ -12,4 +12,3 @@ const connectDB = async () => {
 }
 
 export default connectDB;
-// connection string: mongodb://localhost:27017/
