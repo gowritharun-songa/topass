@@ -46,6 +46,17 @@ export const getUserById = async (req, res) => {
 export const postUser = async (req, res) => {
     try {
         const { name, age, email, password } = req.body;
+        if(!name || !age || !email || !password) {
+            return res.status(400).json({
+                message: "Provide all the fields"
+            });
+        }
+        const user = await User.findOne({email});
+        if(user) {
+            return res.status(400).json({
+                message: "User already exists"
+            });
+        }
         const newUser = await User.create({name, age, email, password});
         return res.status(201).json({
             "message": "User Created Success",
