@@ -1,6 +1,4 @@
 
-GET localhost:5050/api/users
-
 POST http://localhost:5050/api/users
 Content-Type: application/json
 
@@ -10,4 +8,3 @@ Content-Type: application/json
   "email": "gowritharun461@gmail.com",
   "password": "tharun0222"
 }
-

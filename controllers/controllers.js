@@ -1,3 +1,5 @@
+import bcrypt from "bcryptjs";
+
 import User from "../models/schema.js";
 
 export const getUsers = async (req, res) => {
@@ -46,36 +48,47 @@ export const getUserById = async (req, res) => {
 export const postUser = async (req, res) => {
     try {
         const { name, age, email, password } = req.body;
-        if(!name || !age || !email || !password) {
+        if(!name || !email || !password) {
             return res.status(400).json({
-                message: "Provide all the fields"
+                message: "All fields were requires"
             });
         }
-        const user = await User.findOne({email});
+
+        let user = await User.findOne({email});
         if(user) {
             return res.status(400).json({
-                message: "User already exists"
+                message: "User already Exists"
             });
         }
-        const newUser = await User.create({name, age, email, password});
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const newUser = await User.create({
+            name, age, email, password: hashedPassword
+        });
+
         return res.status(201).json({
-            "message": "User Created Success",
+            message: "User created",
             data: newUser
+        });
+
+    } catch(error) {
+        console.log("Error in putUser: ", error.message);
+        return res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message
         })
-    } catch (error) {
-        console.error("Error in postUser", error.message);
-        return res.status(500).json({ message: "Internal server error" });
     }
 }
 
 export const putUser = async (req, res) => {
     const { id } = req.params;
-    const { name, age, email } = req.body;
+    const { name, age, email, password } = req.body;
 
     try {
-        let updatedData = { name, age, email };
+        let updatedData = { name, age, email, password };
         const updatedUser = await User.findByIdAndUpdate(id, updatedData, {new: true, runValidators: true});
-
         if(!updatedUser) {
             return res.status(404).json({
                 message: "User not Found"
