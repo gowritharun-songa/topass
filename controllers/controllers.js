@@ -45,8 +45,8 @@ export const getUserById = async (req, res) => {
 
 export const postUser = async (req, res) => {
     try {
-        const { name, age, email } = req.body;
-        const newUser = await User.create({name, age, email});
+        const { name, age, email, password } = req.body;
+        const newUser = await User.create({name, age, email, password});
         return res.status(201).json({
             "message": "User Created Success",
             data: newUser

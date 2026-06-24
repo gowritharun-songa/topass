@@ -16,6 +16,13 @@ const usersSchema = mongoose.Schema({
         lowercase: true,
         trim: true,
         match: /^\S+@\S+\.\S+$/
+    },
+    password: {
+        type: String,
+        required: true,
+        minLength: 6,
+        maxLength: 16
+
     }
 }, {
     timestamps: true,

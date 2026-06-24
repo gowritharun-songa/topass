@@ -1,4 +1,3 @@
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -31,13 +30,3 @@ connectDB().then(() => {
     console.log(`Server started running on PORT: ${PORT}`);
   });
 });
-
-// Basically we need 4 api end points
-/*
-     GET --> /api/users => return all the users
-     GET --> /api/users/:id => return 1 user
-     POST -> /api/users => upload new User
-     PATCH -> /api/users => just update the name
-     PUT -> /api/users -> rename everything
-     DELETE -> /api/users -> delete that thing
- */
