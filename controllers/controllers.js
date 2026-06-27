@@ -47,7 +47,7 @@ export const getUserById = async (req, res) => {
 
 export const postUser = async (req, res) => {
     try {
-        const { name, age, email, password } = req.body;
+        const { name, age, email, password, role } = req.body;
         if(!name || !email || !password) {
             return res.status(400).json({
                 message: "All fields were requires"
@@ -65,7 +65,7 @@ export const postUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         const newUser = await User.create({
-            name, age, email, password: hashedPassword
+            name, age, email, password: hashedPassword, role
         });
 
         return res.status(201).json({

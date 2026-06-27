@@ -14,14 +14,17 @@ import { auth } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-router.get('/profile', auth , getUser);
 router.get('/', auth, getUsers);
 router.get('/:id', getUserById);
+router.get('/profile', auth , getUser);
+
 router.post('/', postUser);
+router.post('/login', loginUser);
+
 router.patch('/:id',auth, patchUser);
 router.put('/:id', putUser);
+
 router.delete('/:id', auth, deleteUser);
-router.post('/login', loginUser);
 
 
 export default router;
