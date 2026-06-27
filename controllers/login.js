@@ -7,6 +7,12 @@ export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        if(!email || !password) {
+            return res.status(400).json({
+                message: "Provide both Email and Password"
+            });
+        }
+
         // Find the user with the email
         const user = await User.findOne({email});
         if(!user) {
