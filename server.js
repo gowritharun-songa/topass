@@ -6,7 +6,9 @@ import dotenv from "dotenv";
 import router from "./routes/routes.js";
 import connectDB from './config/db.js';
 
-// Middlewares
+import {loginUser} from "./controllers/login.js";
+
+// Middleware imports
 import logger from "./middlewares/logger.js";
 import errorHandler from "./middlewares/errorHandler.js";
 
@@ -25,6 +27,7 @@ app.use(express.json());
 app.use(logger);
 app.use(errorHandler);
 app.use("/api/users", router);
+app.post("/api/login", loginUser);
 
 connectDB().then(() => {
   app.listen(PORT, () => {

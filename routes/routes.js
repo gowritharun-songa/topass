@@ -11,6 +11,7 @@ import {
 import {loginUser} from "../controllers/login.js";
 import {getUser} from "../controllers/getUser.js";
 import { auth } from "../middlewares/auth.js";
+import {adminOnly} from "../middlewares/adminOnly.js";
 
 const router = express.Router();
 
@@ -19,12 +20,12 @@ router.get('/:id', getUserById);
 router.get('/profile', auth , getUser);
 
 router.post('/', postUser);
-router.post('/login', loginUser);
 
 router.patch('/:id',auth, patchUser);
 router.put('/:id', putUser);
 
-router.delete('/:id', auth, deleteUser);
+router.delete('/:id', auth, adminOnly, deleteUser);
+
 
 
 export default router;
