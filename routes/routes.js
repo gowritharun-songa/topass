@@ -15,7 +15,7 @@ import {ownerOrAdmin} from "../middlewares/ownerOrAdmin.js";
 
 const router = express.Router();
 
-router.get('/', auth, getUsers);
+router.get('/', getUsers);
 router.get('/:id', getUserById);
 router.get('/profile', auth , getUser);
 

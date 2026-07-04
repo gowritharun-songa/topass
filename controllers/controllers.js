@@ -4,6 +4,8 @@ import User from "../models/schema.js";
 
 export const getUsers = async (req, res, next) => {
     try {
+        throw new Error("For Testing Purposes");
+
         const users = await User.find();
         if(users.length === 0) {
             return res.status(400).json({

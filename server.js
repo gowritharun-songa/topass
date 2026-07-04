@@ -10,8 +10,7 @@ import {loginUser} from "./controllers/login.js";
 
 // Middleware imports
 import logger from "./middlewares/logger.js";
-import {errorHandler} from "./middlewares/errorHandler.js";
-
+import errorHandler from "./middlewares/errorHandler.js";
 
 dotenv.config({
   quiet: true
@@ -25,9 +24,10 @@ const PORT = process.env.PORT || 5050;
 app.use(cors());
 app.use(express.json());
 app.use(logger);
-app.use(errorHandler);
+
 app.use("/api/users", router);
 app.post("/api/login", loginUser);
+app.use(errorHandler);
 
 connectDB().then(() => {
   app.listen(PORT, () => {
