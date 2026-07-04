@@ -10,7 +10,7 @@ import {loginUser} from "./controllers/login.js";
 
 // Middleware imports
 import logger from "./middlewares/logger.js";
-import errorHandler from "./middlewares/errorHandler.js";
+import {errorHandler} from "./middlewares/errorHandler.js";
 
 
 dotenv.config({

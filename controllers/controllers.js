@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 
 import User from "../models/schema.js";
 
-export const getUsers = async (req, res) => {
+export const getUsers = async (req, res, next) => {
     try {
         const users = await User.find();
         if(users.length === 0) {
@@ -15,11 +15,7 @@ export const getUsers = async (req, res) => {
             data: users
         });
     } catch(error) {
-        console.error("Error in getUsers", error.message);
-        return res.status(500).json({
-            message: "Internal Server Error",
-            error: error.message
-        })
+        next(error);
     }
 }
 
