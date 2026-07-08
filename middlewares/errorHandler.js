@@ -2,10 +2,15 @@
 const errorHandler = (error, req, res, next) => {
     console.log(error);
 
-    return res.status(500 || error.status).json({
+    const statusCode = error.statusCode;
+    const status = error.status;
+
+    res.status(statusCode).json({
         success: false,
-        message: "Interval Server Error" || error.message
+        status,
+        message: error.message
     });
+
 }
 
 export default errorHandler;

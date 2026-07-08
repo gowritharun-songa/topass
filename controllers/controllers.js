@@ -1,45 +1,35 @@
 import bcrypt from "bcryptjs";
 
 import User from "../models/schema.js";
+import AppError from "../utils/AppError.js";
 
 export const getUsers = async (req, res, next) => {
     try {
-        throw new Error("For Testing Purposes");
-
         const users = await User.find();
-        if(users.length === 0) {
-            return res.status(400).json({
-                message: "No Users Found",
-            })
-        }
         return res.status(200).json({
             message: "Users fetched Successfully",
             data: users
         });
-    } catch(error) {
+
+    } catch (error) {
         next(error);
     }
 }
 
-export const getUserById = async (req, res) => {
+export const getUserById = async (req, res, next) => {
     const { id } = req.params;
     try {
         const user = await User.findById(id);
+
         if(!user) {
-            res.status(404).json({
-                message: "User not Found",
-            });
+            throw new AppError("User not Found", 404);
         }
         return res.status(200).json({
             message: "User Found",
             data: user
         });
     } catch(error) {
-        console.log("Error in getUserById ");
-        return res.status(500).json({
-            message: "Internal Server Error",
-            error: error.message
-        })
+        next(error);
     }
 }
 
