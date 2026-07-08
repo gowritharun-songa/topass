@@ -33,27 +33,23 @@ export const getUserById = async (req, res, next) => {
     }
 }
 
-export const postUser = async (req, res) => {
+export const postUser = async (req, res, next) => {
     try {
         const { name, age, email, password, role } = req.body;
         if(!name || !email || !password) {
-            return res.status(400).json({
-                message: "All fields were requires"
-            });
+            throw new AppError("All Fields are required", 400);
         }
 
         let user = await User.findOne({email});
         if(user) {
-            return res.status(400).json({
-                message: "User already Exists"
-            });
+            throw new AppError("User already Exists", 400);
         }
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
         const newUser = await User.create({
-            name, age, email, password: hashedPassword, role
+            name, age, email, password: hashedPassword, role: "user"
         });
 
         return res.status(201).json({
@@ -62,15 +58,11 @@ export const postUser = async (req, res) => {
         });
 
     } catch(error) {
-        console.log("Error in putUser: ", error.message);
-        return res.status(500).json({
-            message: "Internal Server Error",
-            error: error.message
-        })
+        next(error);
     }
 }
 
-export const putUser = async (req, res) => {
+export const putUser = async (req, res, next) => {
     const { id } = req.params;
     const { name, age, email, password } = req.body;
 
@@ -78,9 +70,7 @@ export const putUser = async (req, res) => {
         let updatedData = { name, age, email, password };
         const updatedUser = await User.findByIdAndUpdate(id, updatedData, {new: true, runValidators: true});
         if(!updatedUser) {
-            return res.status(404).json({
-                message: "User not Found"
-            });
+            throw new AppError("User not Found", 404);
         }
 
         return res.status(200).json({
@@ -89,44 +79,32 @@ export const putUser = async (req, res) => {
         })
 
     } catch(error) {
-        console.log("Error in putUser");
-        return res.status(500).json({
-            message: "Internal Server Error",
-            error: error.message
-        })
+        next(error);
     }
 }
 
-export const patchUser = async (req, res) => {
+export const patchUser = async (req, res, next) => {
     const { id } = req.params;
     try {
         const updatedUser = await User.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
         if(!updatedUser) {
-            return res.status(404).json({
-                message: "User not Found",
-            });
+            throw new AppError("User not Found", 404);
         }
         return res.status(200).json({
             message: "User updated Successfully",
             data: updatedUser
         });
     } catch(error) {
-        console.error("Error in Patch User");
-        return res.status(500).json({
-            message: "Internal Server Error",
-            error: error.message
-        })
+        next(error);
     }
 }
 
-export const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res, next) => {
     const {id} = req.params;
     try {
         const deletedUser = await User.findByIdAndDelete(id);
         if(!deletedUser) {
-            return res.status(404).json({
-                message: "User not found"
-            })
+            throw new AppError("User not Found", 404);
         }
         return res.status(200).json({
             message: "User Deleted Successfully",
@@ -134,10 +112,6 @@ export const deleteUser = async (req, res) => {
         })
 
     } catch(error) {
-        console.error("Error in deleteUser", error.message);
-        return res.status(500).json({
-            message: "Internal Server Error",
-            error: error.message
-        })
+        next(error);
     }
 }
