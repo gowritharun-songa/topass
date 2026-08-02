@@ -2,36 +2,41 @@ import bcrypt from "bcryptjs";
 
 import User from "../models/schema.js";
 import AppError from "../utils/AppError.js";
+import asyncHandler from "../utils/asyncHandler.js";
 
-export const getUsers = async (req, res, next) => {
-    try {
-        const users = await User.find();
-        return res.status(200).json({
-            message: "Users fetched Successfully",
-            data: users
-        });
+// export const getUsers = async (req, res, next) => {
+//     try {
+//         const users = await User.find();
+//         return res.status(200).json({
+//             message: "Users fetched Successfully",
+//             data: users
+//         });
+//
+//     } catch (error) {
+//         next(error);
+//     }
+// }
 
-    } catch (error) {
-        next(error);
-    }
-}
+export const getUsers = asyncHandler(async (req, res) => {
+    const users = await User.find();
 
-export const getUserById = async (req, res, next) => {
+    res.status(200).json({
+        data: users
+    });
+});
+
+export const getUserById = asyncHandler( async (req, res, next) => {
     const { id } = req.params;
-    try {
-        const user = await User.findById(id);
+    const user = await User.findById(id);
 
-        if(!user) {
-            throw new AppError("User not Found", 404);
-        }
-        return res.status(200).json({
-            message: "User Found",
-            data: user
-        });
-    } catch(error) {
-        next(error);
+    if(!user) {
+        throw new AppError("User not Found", 404);
     }
-}
+    res.status(200).json({
+        message: "User Found",
+        data: user
+    });
+});
 
 export const postUser = async (req, res, next) => {
     try {
